@@ -1,0 +1,171 @@
+import java.util.*;
+import java.io.*;
+public class da{
+    static void display(char []a,int n){
+        if(n==3)
+            System.out.println("The game begins now\n\nLEVEL 1 -> find 5 words from below\n{Enter 0 to exit game}\n \nMake meaningful words from the below matrix :");
+        else if(n==4)
+            System.out.println("Congrats on completing level 1 we continue\n\nNow in  LEVEL 2 -> find 7 words from below\n{Enter 0 to exit game}\n\nMake meaningful words from the below matrix :");
+        for(int j=0;j<n*n;j++){
+            System.out.print(a[j] + "    ");
+            if( (j+1) % n == 0)
+            System.out.println();
+        }
+    }
+    public static void exit1(String [] lvl1_guy,File file){
+        String tt="";
+        int a = lvl1_guy.length;
+        String A;
+        A = Integer.toString(a);
+        tt+=(A+" ");
+        for(int i=0;i<a;i++)
+            tt+=(lvl1_guy[i]+" ");
+    try{ 
+       FileWriter writer = new FileWriter(file);
+        writer.write(tt);
+        writer.close();
+       }catch (FileNotFoundException e) {
+        System.out.println("The save file could not be found.");
+      } catch (IOException e) {
+        System.out.println("An error occurred while reading the save file.");
+      }
+        System.out.println("Your scores have been saved successfully! and can be accessed after you open / run this program again");
+}
+public static void exit1(String [] lvl1_guy,String[] lvl2_guy,File file){
+        String tt="";
+        int a = lvl1_guy.length,b =lvl2_guy.length;
+        String A,B;
+        A = Integer.toString(a);
+        B = Integer.toString(b);
+        tt+=(A+" ");
+        for(int i=0;i<a;i++)
+            tt+=(lvl1_guy[i]+" ");
+        tt+=(B+" ");
+        for(int i=0;i<b;i++)
+            tt+=(lvl2_guy[i]+" ");
+    try{ 
+       FileWriter writer = new FileWriter(file);
+        writer.write(tt);
+        //writer.flush();
+        writer.close();
+       }catch (FileNotFoundException e) {
+        System.out.println("The save file could not be found.");
+      } catch (IOException e) {
+        System.out.println("An error occurred while reading the save file.");
+    }
+        System.out.println("Your scores have been saved successfully! and can be accessed after you open / run this program again");
+      
+    }
+    public static void reopen(File file,String[] lvl1_guy,String[] lvl2_guy)throws FileNotFoundException{
+        System.out.println("Continuation : ");
+        try{
+        Scanner myre = new Scanner(file);
+        String reader = "";
+        while(myre.hasNextLine()){
+            reader += myre.nextLine();
+        }
+        myre.close();
+        String[] arrOfStr = reader.split(" ");
+        int a = Integer.parseInt(arrOfStr[0]);
+        int ff=1;//maybe be cna be 0 no cause inside only ff++
+        for (int u = 0; u < a; u++)
+        lvl1_guy[u] = arrOfStr[ff++];
+        if (a == 5) {
+        int b = Integer.parseInt(arrOfStr[ff++]);
+        for (int u = 0; u < b; u++)
+            lvl2_guy[u] = arrOfStr[ff++];
+    }
+        }catch (FileNotFoundException e) {
+                System.out.println("The save file could not be found.");
+        }
+    }
+    static int truelen(String[] a){
+        int count = 0;
+        for(String i :a){
+            if(i == null)//no need for this ? 
+            break;
+            count++;
+        }
+        return count;
+    }
+    public static void main(String[] args) throws IOException{
+        Scanner sc = new Scanner(System.in);
+        String inn="";
+        char [] lvl1={'C','A','P','Z','T','I','B','E','E'};
+        String[] lvl1_solutions = {"CAP","ATE","BEE","PIE","BE"};
+        char [] lvl2 =  {'W','U','J','M','P','E','T','O','F','O','E','C','Y','I','N','K'};
+        String [] lvl2_solutions = {"PET","MOCK","INK","WEEK","IN","TO","TEN"};
+        String [] lvl1_guy =new String[5];
+        String [] lvl2_guy =new String[7];
+        int score=0;
+        File file = new File("C:\\Users\\91951\\OneDrive\\Desktop\\javapro\\saveData.txt");
+        Scanner dummycheck = new Scanner(file);
+        String dummy="";
+        while(dummycheck.hasNextLine()){
+            dummy += dummycheck.nextLine();
+        }     //can just rediuce code ok  
+        if(dummy.length()!=0){
+            reopen(file, lvl1_guy, lvl2_guy);
+        }
+        dummycheck.close();
+        int l=truelen(lvl1_guy);
+        int ff=l;
+        int mm=truelen(lvl2_guy);
+        String in="";
+        int i=0;
+        if(l<5){
+        display(lvl1, 3);
+        while(i<5-l){
+                in = sc.nextLine();
+                if(in.equals("0")==true){
+                    exit1(lvl1_guy,file); 
+                    break;
+                }
+                lvl1_guy[ff]=in.toUpperCase();
+                ff++;
+                i++;
+        }
+    }
+    if(lvl2_guy.length != 0){
+        for(String m:lvl1_guy){
+            for(int j=0;j<5;j++){ 
+                if(m.equals(lvl1_solutions[j])==true){
+                    score+=100;
+                }
+                }
+        }
+    }
+    if(l==5)
+            System.out.println("You have already completed level 1\n");
+        if(score < 500)
+            System.out.print("Well tried \nYou have scored : " + score +" / 1200 \n{You need to score 500 points to unlock level 2}\n");
+            else{
+                System.out .print("\n\nYou have entered level 2 \n\n\n");
+                display(lvl2, 4); 
+                i=0;
+                System.out.print(lvl2_guy.length+"\n");//7 here but null ? tf
+                ff = lvl2_guy.length;
+                while(i < 7-lvl2_guy.length){//so mm value is the problem here ? yep this only probs ok true count problem sure
+                inn = sc.nextLine(); 
+                if(inn.equals("0")==true){
+                    exit1(lvl1_guy,lvl2_guy,file);
+                    break;
+                }
+                lvl2_guy[ff]=inn.toUpperCase();
+                ff++;
+                i++;
+            }
+        for(String m:lvl2_guy){
+            for(int j=0;j<7;j++){ 
+                if(m.equals(lvl2_solutions[j])==true)
+                    score+=100;
+            }
+        }
+        if(score!=1200)
+            System.out.print("Game Completed \nYour score : "+score+"/1200\n");
+            else
+            System.out.print("\n\nYou Won \nYou have completed the game , got full marks yay!!!!");
+        }    
+        sc.close();  
+    }
+}
